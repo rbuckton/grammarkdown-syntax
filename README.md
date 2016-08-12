@@ -1,0 +1,2 @@
+# Grammarkdown Language Syntax
+This is the [Grammarkdown](http://github.com/rbuckton/grammarkdown) language syntax for TextMate-compatible editors such as [Visual Studio Code](http://code.visualstudio.com).

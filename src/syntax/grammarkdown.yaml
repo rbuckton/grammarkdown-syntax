@@ -1,0 +1,237 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Grammarkdown
+scopeName: source.grammar
+fileTypes: [grammar,gmd]
+uuid: 6b58beb0-cbc3-4318-b011-1a82fda91bee
+
+patterns:
+- include: '#comment'
+- include: '#keyword'
+- include: '#string'
+- include: '#production'
+- include: '#rhs'
+
+repository:
+  comment:
+    name: comment.grammar
+    patterns:
+    - include: '#comment-line'
+    - include: '#comment-block'
+
+  comment-line:
+    name: comment.line.grammar
+    match: //.*$\n?
+
+  comment-block:
+    name: comment.block.grammar
+    begin: /\*
+    end: \*/
+
+  string:
+    name: string.grammar
+    patterns:
+    - include: '#string-single'
+    - include: '#string-double'
+
+  string-single:
+    name: string.quoted.single.grammar
+    match: ('[^']*?')
+
+  string-double:
+    name: string.quoted.double.grammar
+    match: ("[^"]*?")
+
+  keyword:
+    name: keyword.control.grammar
+    match: >
+      (?x)
+      \b( but
+        | empty
+        | goal
+        | here
+        | if
+        | import
+        | lexical
+        | lookahead
+        | match
+        | no
+        | not
+        | of
+        | one
+        | or
+        | through
+      )\b
+
+  production:
+    name: meta.production.grammar
+    begin: ^(\w+)
+    beginCaptures:
+      '1': { name: entity.name.production.goal.grammar }
+    end: (?:(:::)|(::)|(:))
+    endCaptures:
+      '1': { name: punctuation.production.triple-colon.grammar }
+      '2': { name: punctuation.production.double-colon.grammar }
+      '3': { name: punctuation.production.single-colon.grammar }
+    patterns:
+    - include: '#parameters'
+
+  parameters:
+    begin: \[
+    end: \]
+    patterns:
+    - include: "#parameter"
+
+  parameter:
+    name: variable.parameter.grammar
+    match: \b\w+\b
+
+  rhs:
+    patterns:
+    - include: '#prose'
+    - include: '#symbol'
+    - include: '#link'
+
+  link:
+    name: markup.underline.link
+    match: "#[\\w-_]+$"
+
+  prose:
+    name: markup.quote.bold.grammar
+    begin: ^\s+>
+    end: $
+    patterns:
+    - include: '#prose-content'
+
+  prose-content:
+    patterns:
+    - include: '#string'
+    - include: '#nonterminal-embed'
+    - include: '#arguments'
+    - include: '#token'
+
+  symbol:
+    patterns:
+    - include: '#assertion'
+    - include: '#token'
+    - include: '#nonterminal'
+
+  assertion:
+    name: meta.assertion.grammar
+    patterns:
+    - include: "#empty-assertion"
+    - include: "#parameter-assertion"
+    - include: "#lexical-goal-assertion"
+    - include: "#no-symbol-here-assertion"
+    - include: "#lookahead-assertion"
+    - include: '#prose-assertion'
+    - include: '#match-assertion'
+
+  empty-assertion:
+    match: \[\s*(empty)\s*\]
+    captures:
+      '1': { name: keyword.control.grammar }
+
+  parameter-assertion:
+    match: \[\s*[+~]\s*(\w+)\s*\]
+    captures:
+      '1': { name: variable.parameter.grammar }
+
+  lexical-goal-assertion:
+    match: \[\s*(lexical)\s+(goal)\s+(\w+)\s*]
+    captures:
+      '1': { name: keyword.control.grammar }
+      '2': { name: keyword.control.grammar }
+      '3': { name: variable.other.nonterminal.grammar }
+
+  no-symbol-here-assertion:
+    begin: \[\s*(no)\b
+    beginCaptures:
+      '1': { name: keyword.control.grammar }
+    end: \b(here)\s*\]
+    endCaptures:
+      '1': { name: keyword.control.grammar }
+    patterns:
+    - include: '#keyword'
+    - include: '#token'
+    - include: '#nonterminal-id'
+
+  lookahead-assertion:
+    begin: \[\s*(lookahead)\b
+    beginCaptures:
+      '1': { name: keyword.control.grammar }
+    end: \]
+    patterns:
+    - include: '#token'
+    - include: '#nonterminal'
+
+  prose-assertion:
+    begin: \[<
+    end: \]
+    patterns:
+    - include: '#prose-assertion-content'
+
+  prose-assertion-nested:
+    begin: \[
+    end: \]
+    patterns:
+    - include: '#prose-assertion-content'
+
+  prose-assertion-content:
+    patterns:
+    - include: '#prose-content'
+    - include: '#prose-assertion-nested'
+
+  match-assertion:
+    begin: \[\s*(match|but)\s+(only)\s+(if)\b
+    beginCaptures:
+      '1': { name: keyword.control.grammar }
+      '2': { name: keyword.control.grammar }
+      '3': { name: keyword.control.grammar }
+    end: \]
+    patterns:
+    - include: '#prose-assertion-content'
+
+  token:
+    patterns:
+    - include: "#terminal"
+    - include: "#unicode-character-literal"
+
+  terminal:
+    name: string.quoted.single.terminal.grammar
+    match: "```|`.+?`"
+
+  unicode-character-literal:
+    name: constant.numeric.grammar
+    match: <\w+?>|(?i)\bU\+[\da-f]{4}\b
+
+  nonterminal:
+    patterns:
+    - include: '#nonterminal-id'
+    - include: '#arguments'
+
+  nonterminal-id:
+    patterns:
+    - include: '#nonterminal-id-rhs'
+    - include: '#nonterminal-embed'
+
+  nonterminal-embed:
+    begin: \|
+    end: \|
+    patterns:
+    - include: '#nonterminal-id-rhs'
+
+  nonterminal-id-rhs:
+    name: variable.other.nonterminal.markup.italic.grammar
+    match: \b\w+\b
+
+  arguments:
+    begin: \[
+    end: \]
+    patterns:
+    - include: '#argument'
+
+  argument:
+    name: variable.parameter.grammar
+    match: \b\w+\b
+...

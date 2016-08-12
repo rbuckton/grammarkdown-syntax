@@ -1,0 +1,77 @@
+{
+  "name": "grammarkdown-language",
+  "version": "0.3.0",
+  "displayName": "Grammarkdown Language Support",
+  "description": "Grammarkdown Language Support for Visual Studio Code",
+  "license": "Apache-2.0",
+  "keywords": [
+    "grammar",
+    "language",
+    "syntax",
+    "dsl",
+    "javascript",
+    "typescript",
+    "ecmascript"
+  ],
+  "author": {
+    "name": "Ron Buckton",
+    "email": "rbuckton@chronicles.org",
+    "url": "http://github.com/rbuckton"
+  },
+  "publisher": "rbuckton",
+  "private": true,
+  "main": "./out/lib/extension",
+  "scripts": {
+    "build": "gulp build",
+    "prepublish": "gulp build",
+    "vscode:prepublish": "gulp build"
+  },
+  "categories": [
+    "Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:grammarkdown"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "grammarkdown",
+        "aliases": [
+          "Grammarkdown",
+          "grammar"
+        ],
+        "extensions": [
+          ".grammar",
+          ".gmd"
+        ],
+        "configuration": "./grammarkdown.configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "grammarkdown",
+        "scopeName": "source.grammar",
+        "path": "./out/syntax/grammarkdown.tmLanguage"
+      }
+    ]
+  },
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^4.0.29",
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tsb": "git://github.com/rbuckton/gulp-tsb.git#srcDestMethods",
+    "gulp-convert": "^0.2.0",
+    "gulp-rename": "^1.2.2",
+    "merge2": "^1.0.0",
+    "through2": "^2.0.0",
+    "typescript": "next",
+    "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^1.1.2"
+  }
+}

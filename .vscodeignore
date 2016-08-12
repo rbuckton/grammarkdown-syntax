@@ -1,0 +1,8 @@
+.vscode
+.vscodeignore
+.git
+.gitignore
+src
+gulpfile.js
+**/*.map
+**/*.d.ts
