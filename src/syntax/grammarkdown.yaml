@@ -1,9 +1,9 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 ---
 name: Grammarkdown
-scopeName: source.gmd
+scopeName: source.grammar
 fileTypes: [gramarkdown,grammar,gmd]
-uuid: 0b1c8bf1-63aa-46a2-a052-3142fa35b742
+uuid: 6b58beb0-cbc3-4318-b011-1a82fda91bee
 
 patterns:
 - include: '#gmd'
@@ -23,18 +23,18 @@ repository:
     patterns:
       - match: (<)(ins|del)([^>]*)(>)
         captures:
-          '1': { name: punctuation.definition.tag.gmd }
-          '2': { name: entity.name.tag.gmd }
+          '1': { name: punctuation.definition.tag.grammar }
+          '2': { name: entity.name.tag.grammar }
           '3': { patterns: [include: '#attributes'] }
-          '4': { name: punctuation.definition.tag.gmd }
-        name: trivia.gmd
+          '4': { name: punctuation.definition.tag.grammar }
+        name: trivia.grammar
       - match: (<\/)(ins|del)(>)
         captures:
-          '1': { name: punctuation.definition.tag.gmd }
-          '2': { name: entity.name.tag.gmd }
+          '1': { name: punctuation.definition.tag.grammar }
+          '2': { name: entity.name.tag.grammar }
           '3': { patterns: [include: '#attributes'] }
-          '4': { name: punctuation2.definition.tag.gmd }
-        name: trivia.gmd
+          '4': { name: punctuation2.definition.tag.grammar }
+        name: trivia.grammar
 
   gmd-comment:
     patterns:
@@ -43,12 +43,12 @@ repository:
 
   gmd-comment-line:
     match: //.*$\n?
-    name: comment.line.gmd
+    name: comment.line.grammar
 
   gmd-comment-block:
     begin: /\*
     end: \*/
-    name: comment.block.gmd
+    name: comment.block.grammar
 
   gmd-string:
     patterns:
@@ -57,28 +57,28 @@ repository:
 
   gmd-string-single:
     match: ('[^']*?')
-    name: string.quoted.single.gmd
+    name: string.quoted.single.grammar
 
   gmd-string-double:
     match: ("[^"]*?")
-    name: string.quoted.double.gmd
+    name: string.quoted.double.grammar
 
   gmd-keyword:
     match: \b(but|empty|goal|here|if|import|lexical|lookahead|match|no|not|of|one|or|through)\b
-    name: keyword.control.gmd
+    name: keyword.control.grammar
 
   gmd-production:
     begin: (\w+)(?=(?:\s*\[(\s*\w+\s*,?)*\])?\s*:{1,3})
     beginCaptures:
-      '1': { name: entity.name.function.production.goal.gmd }
+      '1': { name: entity.name.function.production.goal.grammar }
     end: (?:(:::)|(::)|(:))
     endCaptures:
-      '1': { name: punctuation.production.triple-colon.gmd }
-      '2': { name: punctuation.production.double-colon.gmd }
-      '3': { name: punctuation.production.single-colon.gmd }
+      '1': { name: punctuation.production.triple-colon.grammar }
+      '2': { name: punctuation.production.double-colon.grammar }
+      '3': { name: punctuation.production.single-colon.grammar }
     patterns:
     - include: '#gmd-parameters'
-    name: meta.production.gmd
+    name: meta.production.grammar
 
   gmd-parameters:
     begin: \[
@@ -88,7 +88,7 @@ repository:
 
   gmd-parameter:
     match: \b\w+\b
-    name: variable.parameter.gmd
+    name: variable.parameter.grammar
 
   gmd-rhs:
     patterns:
@@ -98,14 +98,14 @@ repository:
 
   gmd-link:
     match: \#[-\w_]+
-    name: markup.underline.link.gmd
+    name: markup.underline.link.grammar
 
   gmd-prose:
     begin: ^\s+>
     end: $
     patterns:
     - include: '#gmd-prose-content'
-    name: markup.quote.bold.gmd
+    name: markup.quote.bold.grammar
 
   gmd-prose-content:
     patterns:
@@ -122,7 +122,7 @@ repository:
     - include: '#gmd-nonterminal'
 
   gmd-assertion:
-    name: meta.assertion.gmd
+    name: meta.assertion.grammar
     patterns:
     - include: "#gmd-empty-assertion"
     - include: "#gmd-parameter-assertion"
@@ -135,27 +135,27 @@ repository:
   gmd-empty-assertion:
     match: \[\s*(empty)\s*\]
     captures:
-      '1': { name: keyword.control.gmd }
+      '1': { name: keyword.control.grammar }
 
   gmd-parameter-assertion:
     match: \[\s*[+~]\s*(\w+)\s*\]
     captures:
-      '1': { name: variable.parameter.gmd }
+      '1': { name: variable.parameter.grammar }
 
   gmd-lexical-goal-assertion:
     match: \[\s*(lexical)\s+(goal)\s+(\w+)\s*]
     captures:
-      '1': { name: keyword.control.gmd }
-      '2': { name: keyword.control.gmd }
-      '3': { name: variable.other.nonterminal.gmd }
+      '1': { name: keyword.control.grammar }
+      '2': { name: keyword.control.grammar }
+      '3': { name: variable.other.nonterminal.grammar }
 
   gmd-no-symbol-here-assertion:
     begin: \[\s*(no)\b
     beginCaptures:
-      '1': { name: keyword.control.gmd }
+      '1': { name: keyword.control.grammar }
     end: \b(here)\s*\]
     endCaptures:
-      '1': { name: keyword.control.gmd }
+      '1': { name: keyword.control.grammar }
     patterns:
     - include: '#gmd-keyword'
     - include: '#gmd-token'
@@ -164,7 +164,7 @@ repository:
   gmd-lookahead-assertion:
     begin: \[\s*(lookahead)\b
     beginCaptures:
-      '1': { name: keyword.control.gmd }
+      '1': { name: keyword.control.grammar }
     end: \]
     patterns:
     - include: '#gmd-token'
@@ -190,9 +190,9 @@ repository:
   gmd-match-assertion:
     begin: \[\s*(match|but)\s+(only)\s+(if)\b
     beginCaptures:
-      '1': { name: keyword.control.gmd }
-      '2': { name: keyword.control.gmd }
-      '3': { name: keyword.control.gmd }
+      '1': { name: keyword.control.grammar }
+      '2': { name: keyword.control.grammar }
+      '3': { name: keyword.control.grammar }
     end: \]
     patterns:
     - include: '#gmd-prose-assertion-content'
@@ -204,11 +204,11 @@ repository:
 
   gmd-terminal:
     match: "```|`.+?`"
-    name: string.quoted.single.terminal.gmd
+    name: string.quoted.single.terminal.grammar
 
   gmd-unicode-character-literal:
     match: <[A-Z]+>|&lt;[A-Z]+&gt;|(?i)\bU\+[\da-f]{4}\b
-    name: constant.numeric.gmd
+    name: constant.numeric.grammar
 
   gmd-nonterminal:
     patterns:
@@ -228,7 +228,7 @@ repository:
 
   gmd-nonterminal-id-rhs:
     match: \b\w+\b
-    name: variable.other.nonterminal.markup.italic.gmd
+    name: variable.other.nonterminal.markup.italic.grammar
 
   gmd-arguments:
     begin: \[
@@ -238,7 +238,7 @@ repository:
 
   gmd-argument:
     match: \b\w+\b
-    name: variable.parameter.gmd
+    name: variable.parameter.grammar
 
   gmd-meta:
     patterns:
@@ -249,25 +249,25 @@ repository:
   gmd-import:
     match: '(@)(import)'
     captures:
-      '1': { name: keyword.operator.gmd }
-      '2': { name: keyword.other.gmd }
+      '1': { name: keyword.operator.grammar }
+      '2': { name: keyword.other.grammar }
 
   gmd-define:
     match: '(@)(define)(?:\s+([a-zA-Z]+)(?:\s+(?:(true|false)|(default)))?)?'
     captures:
-      '1': { name: keyword.operator.gmd }
-      '2': { name: keyword.other.gmd }
-      '3': { name: constant.other.gmd }
-      '4': { name: constant.language.gmd }
-      '5': { name: leuwprd.other.gmd }
+      '1': { name: keyword.operator.grammar }
+      '2': { name: keyword.other.grammar }
+      '3': { name: constant.other.grammar }
+      '4': { name: constant.language.grammar }
+      '5': { name: leuwprd.other.grammar }
 
   gmd-line:
     match: (@)(line)(?:\s+(?:(default)|(\d+)))?
     captures:
-      '1': { name: keyword.operator.gmd }
-      '2': { name: keyword.other.gmd }
-      '3': { name: keyword.other.gmd }
-      '4': { name: constant.numeric.gmd }
+      '1': { name: keyword.operator.grammar }
+      '2': { name: keyword.other.grammar }
+      '3': { name: keyword.other.grammar }
+      '4': { name: constant.numeric.grammar }
 
   attributes:
     patterns:
@@ -277,7 +277,7 @@ repository:
 
   tag-generic-attribute:
     match: (?<=[^=])\b([a-zA-Z0-9:-]+)
-    name: entity.other.attribute-name.gmd
+    name: entity.other.attribute-name.grammar
 
   string:
     patterns:
@@ -287,22 +287,22 @@ repository:
   string-double-quoted:
     begin: '"'
     beginCaptures:
-      '0': { name: punctuation.definition.string.begin.gmd }
+      '0': { name: punctuation.definition.string.begin.grammar }
     end: '"'
     endCaptures:
-      '0': { name: punctuation.definition.string.end.gmd }
-    name: string.quoted.double.gmd
+      '0': { name: punctuation.definition.string.end.grammar }
+    name: string.quoted.double.grammar
     patterns:
       - include: '#entities'
 
   string-single-quoted:
     begin: "'"
     beginCaptures:
-      '0': { name: punctuation.definition.string.begin.gmd }
+      '0': { name: punctuation.definition.string.begin.grammar }
     end: "'"
     endCaptures:
-      '0': { name: punctuation.definition.string.end.gmd }
-    name: string.quoted.single.gmd
+      '0': { name: punctuation.definition.string.end.grammar }
+    name: string.quoted.single.grammar
     patterns:
       - include: '#entities'
 
@@ -310,9 +310,9 @@ repository:
     patterns:
       - match: '(&)([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+)(;)'
         captures:
-          '1': { name: punctuation.definition.entity.gmd }
-          '3': { name: punctuation.definition.entity.gmd }
-        name: constant.character.entity.gmd
+          '1': { name: punctuation.definition.entity.grammar }
+          '3': { name: punctuation.definition.entity.grammar }
+        name: constant.character.entity.grammar
       - match: '&'
-        name: invalid.illegal.bad-ampersand.gmd
+        name: invalid.illegal.bad-ampersand.grammar
 ...
