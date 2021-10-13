@@ -1,237 +1,318 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 ---
 name: Grammarkdown
-scopeName: source.grammar
-fileTypes: [grammar,gmd]
-uuid: 6b58beb0-cbc3-4318-b011-1a82fda91bee
+scopeName: source.gmd
+fileTypes: [gramarkdown,grammar,gmd]
+uuid: 0b1c8bf1-63aa-46a2-a052-3142fa35b742
 
 patterns:
-- include: '#comment'
-- include: '#keyword'
-- include: '#string'
-- include: '#production'
-- include: '#rhs'
+- include: '#gmd'
 
 repository:
-  comment:
-    name: comment.grammar
+  gmd:
     patterns:
-    - include: '#comment-line'
-    - include: '#comment-block'
+      - include: '#gmd-comment'
+      - include: '#gmd-string'
+      - include: '#gmd-keyword'
+      - include: '#gmd-production'
+      - include: '#gmd-rhs'
+      - include: '#gmd-trivia'
+      - include: '#gmd-meta'
 
-  comment-line:
-    name: comment.line.grammar
+  gmd-trivia:
+    patterns:
+      - match: (<)(ins|del)([^>]*)(>)
+        captures:
+          '1': { name: punctuation.definition.tag.gmd }
+          '2': { name: entity.name.tag.gmd }
+          '3': { patterns: [include: '#attributes'] }
+          '4': { name: punctuation.definition.tag.gmd }
+        name: trivia.gmd
+      - match: (<\/)(ins|del)(>)
+        captures:
+          '1': { name: punctuation.definition.tag.gmd }
+          '2': { name: entity.name.tag.gmd }
+          '3': { patterns: [include: '#attributes'] }
+          '4': { name: punctuation2.definition.tag.gmd }
+        name: trivia.gmd
+
+  gmd-comment:
+    patterns:
+      - include: '#gmd-comment-line'
+      - include: '#gmd-comment-block'
+
+  gmd-comment-line:
     match: //.*$\n?
+    name: comment.line.gmd
 
-  comment-block:
-    name: comment.block.grammar
+  gmd-comment-block:
     begin: /\*
     end: \*/
+    name: comment.block.gmd
 
-  string:
-    name: string.grammar
+  gmd-string:
     patterns:
-    - include: '#string-single'
-    - include: '#string-double'
+      - include: '#gmd-string-single'
+      - include: '#gmd-string-double'
 
-  string-single:
-    name: string.quoted.single.grammar
+  gmd-string-single:
     match: ('[^']*?')
+    name: string.quoted.single.gmd
 
-  string-double:
-    name: string.quoted.double.grammar
+  gmd-string-double:
     match: ("[^"]*?")
+    name: string.quoted.double.gmd
 
-  keyword:
-    name: keyword.control.grammar
-    match: >
-      (?x)
-      \b( but
-        | empty
-        | goal
-        | here
-        | if
-        | import
-        | lexical
-        | lookahead
-        | match
-        | no
-        | not
-        | of
-        | one
-        | or
-        | through
-      )\b
+  gmd-keyword:
+    match: \b(but|empty|goal|here|if|import|lexical|lookahead|match|no|not|of|one|or|through)\b
+    name: keyword.control.gmd
 
-  production:
-    name: meta.production.grammar
-    begin: ^(\w+)
+  gmd-production:
+    begin: (\w+)(?=(?:\s*\[(\s*\w+\s*,?)*\])?\s*:{1,3})
     beginCaptures:
-      '1': { name: entity.name.production.goal.grammar }
+      '1': { name: entity.name.function.production.goal.gmd }
     end: (?:(:::)|(::)|(:))
     endCaptures:
-      '1': { name: punctuation.production.triple-colon.grammar }
-      '2': { name: punctuation.production.double-colon.grammar }
-      '3': { name: punctuation.production.single-colon.grammar }
+      '1': { name: punctuation.production.triple-colon.gmd }
+      '2': { name: punctuation.production.double-colon.gmd }
+      '3': { name: punctuation.production.single-colon.gmd }
     patterns:
-    - include: '#parameters'
+    - include: '#gmd-parameters'
+    name: meta.production.gmd
 
-  parameters:
+  gmd-parameters:
     begin: \[
     end: \]
     patterns:
-    - include: "#parameter"
+    - include: "#gmd-parameter"
 
-  parameter:
-    name: variable.parameter.grammar
+  gmd-parameter:
     match: \b\w+\b
+    name: variable.parameter.gmd
 
-  rhs:
+  gmd-rhs:
     patterns:
-    - include: '#prose'
-    - include: '#symbol'
-    - include: '#link'
+    - include: '#gmd-prose'
+    - include: '#gmd-symbol'
+    - include: '#gmd-link'
 
-  link:
-    name: markup.underline.link
-    match: "#[\\w-_]+$"
+  gmd-link:
+    match: \#[-\w_]+
+    name: markup.underline.link.gmd
 
-  prose:
-    name: markup.quote.bold.grammar
+  gmd-prose:
     begin: ^\s+>
     end: $
     patterns:
-    - include: '#prose-content'
+    - include: '#gmd-prose-content'
+    name: markup.quote.bold.gmd
 
-  prose-content:
+  gmd-prose-content:
     patterns:
-    - include: '#string'
-    - include: '#nonterminal-embed'
-    - include: '#arguments'
-    - include: '#token'
+    - include: '#gmd-string'
+    - include: '#gmd-nonterminal-embed'
+    - include: '#gmd-arguments'
+    - include: '#gmd-token'
+    - include: source.emd-inline
 
-  symbol:
+  gmd-symbol:
     patterns:
-    - include: '#assertion'
-    - include: '#token'
-    - include: '#nonterminal'
+    - include: '#gmd-assertion'
+    - include: '#gmd-token'
+    - include: '#gmd-nonterminal'
 
-  assertion:
-    name: meta.assertion.grammar
+  gmd-assertion:
+    name: meta.assertion.gmd
     patterns:
-    - include: "#empty-assertion"
-    - include: "#parameter-assertion"
-    - include: "#lexical-goal-assertion"
-    - include: "#no-symbol-here-assertion"
-    - include: "#lookahead-assertion"
-    - include: '#prose-assertion'
-    - include: '#match-assertion'
+    - include: "#gmd-empty-assertion"
+    - include: "#gmd-parameter-assertion"
+    - include: "#gmd-lexical-goal-assertion"
+    - include: "#gmd-no-symbol-here-assertion"
+    - include: "#gmd-lookahead-assertion"
+    - include: '#gmd-prose-assertion'
+    - include: '#gmd-match-assertion'
 
-  empty-assertion:
+  gmd-empty-assertion:
     match: \[\s*(empty)\s*\]
     captures:
-      '1': { name: keyword.control.grammar }
+      '1': { name: keyword.control.gmd }
 
-  parameter-assertion:
+  gmd-parameter-assertion:
     match: \[\s*[+~]\s*(\w+)\s*\]
     captures:
-      '1': { name: variable.parameter.grammar }
+      '1': { name: variable.parameter.gmd }
 
-  lexical-goal-assertion:
+  gmd-lexical-goal-assertion:
     match: \[\s*(lexical)\s+(goal)\s+(\w+)\s*]
     captures:
-      '1': { name: keyword.control.grammar }
-      '2': { name: keyword.control.grammar }
-      '3': { name: variable.other.nonterminal.grammar }
+      '1': { name: keyword.control.gmd }
+      '2': { name: keyword.control.gmd }
+      '3': { name: variable.other.nonterminal.gmd }
 
-  no-symbol-here-assertion:
+  gmd-no-symbol-here-assertion:
     begin: \[\s*(no)\b
     beginCaptures:
-      '1': { name: keyword.control.grammar }
+      '1': { name: keyword.control.gmd }
     end: \b(here)\s*\]
     endCaptures:
-      '1': { name: keyword.control.grammar }
+      '1': { name: keyword.control.gmd }
     patterns:
-    - include: '#keyword'
-    - include: '#token'
-    - include: '#nonterminal-id'
+    - include: '#gmd-keyword'
+    - include: '#gmd-token'
+    - include: '#gmd-nonterminal-id'
 
-  lookahead-assertion:
+  gmd-lookahead-assertion:
     begin: \[\s*(lookahead)\b
     beginCaptures:
-      '1': { name: keyword.control.grammar }
+      '1': { name: keyword.control.gmd }
     end: \]
     patterns:
-    - include: '#token'
-    - include: '#nonterminal'
+    - include: '#gmd-token'
+    - include: '#gmd-nonterminal'
 
-  prose-assertion:
+  gmd-prose-assertion:
     begin: \[<
     end: \]
     patterns:
-    - include: '#prose-assertion-content'
+    - include: '#gmd-prose-assertion-content'
 
-  prose-assertion-nested:
+  gmd-prose-assertion-nested:
     begin: \[
     end: \]
     patterns:
-    - include: '#prose-assertion-content'
+    - include: '#gmd-prose-assertion-content'
 
-  prose-assertion-content:
+  gmd-prose-assertion-content:
     patterns:
-    - include: '#prose-content'
-    - include: '#prose-assertion-nested'
+    - include: '#gmd-prose-content'
+    - include: '#gmd-prose-assertion-nested'
 
-  match-assertion:
+  gmd-match-assertion:
     begin: \[\s*(match|but)\s+(only)\s+(if)\b
     beginCaptures:
-      '1': { name: keyword.control.grammar }
-      '2': { name: keyword.control.grammar }
-      '3': { name: keyword.control.grammar }
+      '1': { name: keyword.control.gmd }
+      '2': { name: keyword.control.gmd }
+      '3': { name: keyword.control.gmd }
     end: \]
     patterns:
-    - include: '#prose-assertion-content'
+    - include: '#gmd-prose-assertion-content'
 
-  token:
+  gmd-token:
     patterns:
-    - include: "#terminal"
-    - include: "#unicode-character-literal"
+    - include: "#gmd-terminal"
+    - include: "#gmd-unicode-character-literal"
 
-  terminal:
-    name: string.quoted.single.terminal.grammar
+  gmd-terminal:
     match: "```|`.+?`"
+    name: string.quoted.single.terminal.gmd
 
-  unicode-character-literal:
-    name: constant.numeric.grammar
-    match: <\w+?>|(?i)\bU\+[\da-f]{4}\b
+  gmd-unicode-character-literal:
+    match: <[A-Z]+>|&lt;[A-Z]+&gt;|(?i)\bU\+[\da-f]{4}\b
+    name: constant.numeric.gmd
 
-  nonterminal:
+  gmd-nonterminal:
     patterns:
-    - include: '#nonterminal-id'
-    - include: '#arguments'
+    - include: '#gmd-nonterminal-id'
+    - include: '#gmd-arguments'
 
-  nonterminal-id:
+  gmd-nonterminal-id:
     patterns:
-    - include: '#nonterminal-id-rhs'
-    - include: '#nonterminal-embed'
+    - include: '#gmd-nonterminal-id-rhs'
+    - include: '#gmd-nonterminal-embed'
 
-  nonterminal-embed:
+  gmd-nonterminal-embed:
     begin: \|
     end: \|
     patterns:
-    - include: '#nonterminal-id-rhs'
+    - include: '#gmd-nonterminal-id-rhs'
 
-  nonterminal-id-rhs:
-    name: variable.other.nonterminal.markup.italic.grammar
+  gmd-nonterminal-id-rhs:
     match: \b\w+\b
+    name: variable.other.nonterminal.markup.italic.gmd
 
-  arguments:
+  gmd-arguments:
     begin: \[
     end: \]
     patterns:
-    - include: '#argument'
+    - include: '#gmd-argument'
 
-  argument:
-    name: variable.parameter.grammar
+  gmd-argument:
     match: \b\w+\b
+    name: variable.parameter.gmd
+
+  gmd-meta:
+    patterns:
+      - include: '#gmd-import'
+      - include: '#gmd-define'
+      - include: '#gmd-line'
+
+  gmd-import:
+    match: '(@)(import)'
+    captures:
+      '1': { name: keyword.operator.gmd }
+      '2': { name: keyword.other.gmd }
+
+  gmd-define:
+    match: '(@)(define)(?:\s+([a-zA-Z]+)(?:\s+(?:(true|false)|(default)))?)?'
+    captures:
+      '1': { name: keyword.operator.gmd }
+      '2': { name: keyword.other.gmd }
+      '3': { name: constant.other.gmd }
+      '4': { name: constant.language.gmd }
+      '5': { name: leuwprd.other.gmd }
+
+  gmd-line:
+    match: (@)(line)(?:\s+(?:(default)|(\d+)))?
+    captures:
+      '1': { name: keyword.operator.gmd }
+      '2': { name: keyword.other.gmd }
+      '3': { name: keyword.other.gmd }
+      '4': { name: constant.numeric.gmd }
+
+  attributes:
+    patterns:
+      - include: '#tag-generic-attribute'
+      - include: '#string'
+      - include: '#entities'
+
+  tag-generic-attribute:
+    match: (?<=[^=])\b([a-zA-Z0-9:-]+)
+    name: entity.other.attribute-name.gmd
+
+  string:
+    patterns:
+      - include: '#string-double-quoted'
+      - include: '#string-single-quoted'
+
+  string-double-quoted:
+    begin: '"'
+    beginCaptures:
+      '0': { name: punctuation.definition.string.begin.gmd }
+    end: '"'
+    endCaptures:
+      '0': { name: punctuation.definition.string.end.gmd }
+    name: string.quoted.double.gmd
+    patterns:
+      - include: '#entities'
+
+  string-single-quoted:
+    begin: "'"
+    beginCaptures:
+      '0': { name: punctuation.definition.string.begin.gmd }
+    end: "'"
+    endCaptures:
+      '0': { name: punctuation.definition.string.end.gmd }
+    name: string.quoted.single.gmd
+    patterns:
+      - include: '#entities'
+
+  entities:
+    patterns:
+      - match: '(&)([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+)(;)'
+        captures:
+          '1': { name: punctuation.definition.entity.gmd }
+          '3': { name: punctuation.definition.entity.gmd }
+        name: constant.character.entity.gmd
+      - match: '&'
+        name: invalid.illegal.bad-ampersand.gmd
 ...
