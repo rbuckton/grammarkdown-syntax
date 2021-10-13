@@ -1,8 +1,8 @@
 {
   "name": "grammarkdown-language",
-  "version": "0.3.2",
-  "displayName": "Grammarkdown Language Support",
-  "description": "Grammarkdown Language Support for Visual Studio Code",
+  "version": "0.3.3",
+  "displayName": "Grammarkdown Syntax Highlighting",
+  "description": "Grammarkdown Syntax Highlighting for Visual Studio Code",
   "license": "Apache-2.0",
   "keywords": [
     "grammar",
